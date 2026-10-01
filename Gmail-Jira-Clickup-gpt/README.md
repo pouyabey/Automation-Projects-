@@ -48,9 +48,9 @@ the appropriate administrative platforms and environment configuration.
 No production secret should ever be committed to this repository.
 
 
-============================================================
-1. PROJECT PURPOSE
-============================================================
+
+## 1. PROJECT PURPOSE
+
 
 Ridgeline IT Automation is an automation system designed to reduce the
 manual administrative work involved in school IT support.
@@ -90,9 +90,9 @@ The long-term goal is to create a centralized and largely automated IT
 operations workflow while reducing repetitive administrative work.
 
 
-============================================================
-2. CURRENT PROJECT STATUS
-============================================================
+
+## 2. CURRENT PROJECT STATUS
+
 
 Currently Working:
 
