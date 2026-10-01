@@ -4,9 +4,11 @@
 Project Status:
 Working Prototype / Pre-Security-Hardening
 
-============================================================
-SECURITY NOTICE
-============================================================
+##### ============================================================
+
+##### SECURITY NOTICE
+
+##### ============================================================
 
 This repository intentionally uses generic placeholders for internal
 infrastructure information.
