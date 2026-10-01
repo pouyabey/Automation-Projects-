@@ -1,27 +1,23 @@
 # Ridgeline IT Automation
-## Gmail + Jira + OpenAI API + Cloudflare Workers + ClickUp
 
-Project Status:
-Working Prototype / Pre-Security-Hardening
+**Gmail + Jira + OpenAI API + Cloudflare Workers + ClickUp**
 
-## ============================================================
-## SECURITY NOTICE
-## ============================================================
+**Project Status:** Working Prototype / Pre-Security-Hardening
 
-This repository intentionally uses generic placeholders for internal
-infrastructure information.
+---
 
-The following values have been removed, redacted, or replaced with
-generic examples for security and privacy reasons:
+## Security Notice
+
+This repository intentionally uses generic placeholders for internal infrastructure information.
+
+The following values have been removed, redacted, or replaced with generic examples for security and privacy reasons:
 
 - Production Worker hostname
 - School email addresses
-- Google Cloud Project ID
-- Google Cloud Project Number
-- Google OAuth Client information
+- Google Cloud Project ID and Project Number
+- Google OAuth client information
 - Google Pub/Sub resource identifiers
-- ClickUp Workspace ID
-- ClickUp Space ID
+- ClickUp Workspace and Space IDs
 - ClickUp List IDs
 - ClickUp Custom Field IDs
 - ClickUp Custom Field Option IDs
@@ -31,29 +27,28 @@ generic examples for security and privacy reasons:
 - Webhook secrets
 - Other environment-specific identifiers
 
-Examples in this document may therefore use placeholders such as:
+Examples in this documentation use placeholders such as:
 
+```text
 <WORKER_DOMAIN>
 <GOOGLE_PROJECT_ID>
 <PUBSUB_TOPIC>
 <CLICKUP_LIST_ID>
 <CUSTOM_FIELD_ID>
 <SCHOOL_IT_EMAIL>
+```
 
-These placeholders do NOT represent the production values.
+These placeholders do **not** represent production values.
 
-Production credentials and identifiers are maintained separately through
-the appropriate administrative platforms and environment configuration.
+Production credentials and identifiers are maintained separately through the appropriate administrative platforms and environment configuration.
 
-No production secret should ever be committed to this repository.
+**No production secret should ever be committed to this repository.**
 
+---
 
+## 1. Project Purpose
 
-## 1. PROJECT PURPOSE
-
-
-Ridgeline IT Automation is an automation system designed to reduce the
-manual administrative work involved in school IT support.
+Ridgeline IT Automation is an automation system designed to reduce the manual administrative work involved in school IT support.
 
 The system connects:
 
@@ -65,8 +60,7 @@ The system connects:
 - Google Cloud Pub/Sub
 - ClickUp
 
-Instead of manually reviewing every email or Jira ticket and manually
-re-entering that information into ClickUp, the system can automatically:
+Instead of manually reviewing every email or Jira ticket and manually re-entering that information into ClickUp, the system can automatically:
 
 1. Detect a new IT request.
 2. Retrieve the relevant request information.
@@ -86,97 +80,72 @@ re-entering that information into ClickUp, the system can automatically:
 16. Link the ClickUp task back to the original request when appropriate.
 17. Maintain processing state to prevent duplicate Gmail tasks.
 
-The long-term goal is to create a centralized and largely automated IT
-operations workflow while reducing repetitive administrative work.
+The long-term goal is to create a centralized and largely automated IT operations workflow while reducing repetitive administrative work.
 
+---
 
+## 2. Current Project Status
 
-## 2. CURRENT PROJECT STATUS
+### Working
 
+- [x] Gmail → AI → ClickUp
+- [x] Jira → AI → ClickUp
+- [x] Manual AI Task Creator → ClickUp
+- [x] Gmail OAuth
+- [x] Gmail API
+- [x] Gmail Watch
+- [x] Google Cloud Pub/Sub
+- [x] Gmail History API
+- [x] Cloudflare Workers KV
+- [x] Gmail message deduplication
+- [x] AI actionable/non-actionable classification
+- [x] Structured AI task generation
+- [x] ClickUp task creation
+- [x] ClickUp custom fields
+- [x] ClickUp subtask creation
+- [x] Related Gmail message links
+- [x] Jira webhook authentication
 
-Currently Working:
+### Not Yet Complete
 
-[X] Gmail → AI → ClickUp
+- [ ] Gmail Pub/Sub webhook authentication hardening
+- [ ] Additional sensitive-data minimization
+- [ ] Final school privacy/data-policy review
+- [ ] Automatic Gmail Watch renewal
+- [ ] Production logging review
+- [ ] Credential rotation procedures
+- [ ] Final production security review
 
-[X] Jira → AI → ClickUp
+---
 
-[X] Manual AI Task Creator → ClickUp
+## 3. High-Level Architecture
 
-[X] Gmail OAuth
+### Gmail Workflow
 
-[X] Gmail API
-
-[X] Gmail Watch
-
-[X] Google Cloud Pub/Sub
-
-[X] Gmail History API
-
-[X] Cloudflare Workers KV
-
-[X] Gmail message deduplication
-
-[X] AI actionable/non-actionable classification
-
-[X] Structured AI task generation
-
-[X] ClickUp task creation
-
-[X] ClickUp custom fields
-
-[X] ClickUp subtask creation
-
-[X] Related Gmail message links
-
-[X] Jira webhook authentication
-
-
-Not Yet Complete:
-
-[ ] Gmail Pub/Sub webhook authentication hardening
-
-[ ] Additional sensitive-data minimization
-
-[ ] Final school privacy/data-policy review
-
-[ ] Automatic Gmail Watch renewal
-
-[ ] Production logging review
-
-[ ] Credential rotation procedures
-
-[ ] Final production security review
-
-
-============================================================
-3. HIGH-LEVEL ARCHITECTURE
-============================================================
-
-GMAIL WORKFLOW:
-
+```text
 Gmail Inbox
     |
     v
 Gmail API Watch
     |
     v
-Google Cloud Pub/Sub Topic
+Google Cloud Pub/Sub
     |
     v
-Pub/Sub Push Subscription
+Push Subscription
     |
     v
 Cloudflare Worker
     |
-    +-------------------------+
-    |                         |
-    v                         v
-Gmail History API       Cloudflare Workers KV
-    |                         |
-    |                         +--> History checkpoint
-    |                         +--> Processed Message IDs
-    |                         +--> Processing state
-    |                         +--> Pub/Sub state
+    +------------------------+
+    |                        |
+    v                        v
+Gmail History API      Cloudflare KV
+    |                        |
+    |                        +--> History checkpoint
+    |                        +--> Processed Message IDs
+    |                        +--> Processing state
+    |                        +--> Pub/Sub state
     |
     v
 New Gmail Message
@@ -200,10 +169,11 @@ OpenAI Responses API
                +--> Parent Task
                +--> Custom Fields
                +--> Subtasks
+```
 
+### Jira Workflow
 
-JIRA WORKFLOW:
-
+```text
 Jira Service Management
     |
     v
@@ -223,10 +193,11 @@ Structured IT Task
     |
     v
 ClickUp API
+```
 
+### Manual Workflow
 
-MANUAL WORKFLOW:
-
+```text
 Ridgeline IT Automation UI
     |
     v
@@ -240,20 +211,19 @@ Editable Task Preview
     |
     v
 Create in ClickUp
+```
 
+---
 
-============================================================
-4. TECHNOLOGIES USED
-============================================================
+## 4. Technologies Used
 
-Cloudflare:
+### Cloudflare
 
 - Cloudflare Workers
 - Cloudflare Workers KV
 - Worker Secrets
 
-
-Google:
+### Google
 
 - Google Cloud
 - Google Auth Platform
@@ -263,175 +233,115 @@ Google:
 - Gmail Watch
 - Google Cloud Pub/Sub
 
-
-AI:
+### AI
 
 - OpenAI API
 - OpenAI Responses API
 - Structured Outputs / JSON Schema
 
-
-IT Service Management:
+### IT Service Management
 
 - Jira Service Management
 - Jira Automation
 
-
-Task Management:
+### Task Management
 
 - ClickUp API
 - ClickUp Lists
 - ClickUp Custom Fields
 - ClickUp Subtasks
 
+---
 
-============================================================
-5. CLOUDFLARE WORKER
-============================================================
+## 5. Cloudflare Worker
 
 The central integration service is implemented as a Cloudflare Worker.
 
 Production hostname:
 
+```text
 <WORKER_DOMAIN>
-
+```
 
 Example:
 
+```text
 https://<WORKER_DOMAIN>
+```
 
+The production hostname has intentionally been removed from this public documentation.
 
-The production hostname has intentionally been removed from this public
-documentation.
+### Worker Routes
 
+| Route | Purpose |
+|---|---|
+| `/` | Main Ridgeline IT Automation interface |
+| `/status` | Reports configuration status |
+| `/test-openai` | Tests OpenAI API connectivity |
+| `/google-auth` | Starts Google OAuth authorization |
+| `/google-oauth-callback` | Receives Google OAuth callback |
+| `/test-gmail` | Tests Gmail API connectivity |
+| `/gmail-watch` | Activates or renews Gmail Watch |
+| `/gmail-state` | Displays Gmail History state |
+| `/gmail-webhook` | Receives Gmail Pub/Sub notifications |
+| `/analyze` | Performs manual AI task analysis |
+| `/create` | Creates a ClickUp task |
+| `/jira-webhook` | Receives Jira Automation events |
 
-Important Worker routes:
+---
 
-/
-
-Main Ridgeline IT Automation web interface.
-
-
-/status
-
-Reports whether required configuration is available.
-
-
-/test-openai
-
-Tests OpenAI API connectivity.
-
-
-/google-auth
-
-Starts Google OAuth authorization.
-
-
-/google-oauth-callback
-
-Receives the Google OAuth callback.
-
-
-/test-gmail
-
-Tests Gmail API connectivity.
-
-
-/gmail-watch
-
-Activates or renews Gmail push notifications.
-
-
-/gmail-state
-
-Displays Gmail History processing state.
-
-
-/gmail-webhook
-
-Receives Google Pub/Sub Gmail notifications.
-
-
-/analyze
-
-Performs manual AI task analysis.
-
-
-/create
-
-Creates a ClickUp task from the manual interface.
-
-
-/jira-webhook
-
-Receives Jira Automation events.
-
-
-============================================================
-6. CLOUDFLARE WORKER SECRETS
-============================================================
+## 6. Cloudflare Worker Secrets
 
 Production secrets are configured through Cloudflare Worker Secrets.
 
-The application expects environment variables similar to:
+Required environment secrets:
 
+```text
 OPENAI_API_KEY
-
 CLICKUP_API_TOKEN
-
 GOOGLE_CLIENT_ID
-
 GOOGLE_CLIENT_SECRET
-
 GOOGLE_OAUTH_STATE_SECRET
-
 GMAIL_REFRESH_TOKEN
-
 JIRA_WEBHOOK_SECRET
+```
 
+The actual values are **not** included in this repository.
 
-IMPORTANT:
+The Worker accesses them through the environment:
 
-The actual values are NOT included in this repository.
-
-
-The application accesses them through the Worker environment.
-
-Conceptual example:
-
+```javascript
 env.OPENAI_API_KEY
-
 env.CLICKUP_API_TOKEN
-
+```
 
 Secrets must never be hardcoded into source code.
 
+---
 
-============================================================
-7. CLOUDFLARE WORKERS KV
-============================================================
+## 7. Cloudflare Workers KV
 
 A Cloudflare Workers KV namespace is bound to the Worker.
 
 Public documentation name:
 
+```text
 <GMAIL_STATE_KV_NAMESPACE>
-
+```
 
 Worker binding:
 
+```text
 GMAIL_STATE
+```
 
+The actual production namespace identifier has intentionally been omitted.
 
-The actual production namespace identifier has been intentionally omitted.
+KV maintains Gmail processing state and helps prevent duplicate processing.
 
+### Important KV Keys
 
-The purpose of KV is to maintain Gmail processing state and significantly
-reduce duplicate processing.
-
-
-Important key patterns:
-
+```text
 gmail:last_history_id
 
 gmail:watch_expiration
@@ -441,58 +351,41 @@ gmail:processed:<MESSAGE_ID>
 gmail:processing:<MESSAGE_ID>
 
 gmail:pubsub:<PUBSUB_MESSAGE_ID>
+```
 
+### Key Purposes
 
-============================================================
-8. GMAIL STATE KEYS
-============================================================
+**`gmail:last_history_id`**
 
-gmail:last_history_id
+Stores the Gmail History ID representing mailbox history already processed.
 
-Stores the Gmail History ID representing the mailbox history that has
-already been processed.
-
-
-------------------------------------------------------------
-
-gmail:watch_expiration
+**`gmail:watch_expiration`**
 
 Stores the expiration timestamp returned by Gmail Watch.
 
-
-------------------------------------------------------------
-
-gmail:processed:<MESSAGE_ID>
+**`gmail:processed:<MESSAGE_ID>`**
 
 Indicates that a Gmail message has already been handled.
 
+**`gmail:processing:<MESSAGE_ID>`**
 
-------------------------------------------------------------
+Temporary state while a message is being processed.
 
-gmail:processing:<MESSAGE_ID>
+**`gmail:pubsub:<PUBSUB_MESSAGE_ID>`**
 
-Represents temporary processing state while a message is being handled.
+Tracks Pub/Sub notification processing.
 
+---
 
-------------------------------------------------------------
-
-gmail:pubsub:<PUBSUB_MESSAGE_ID>
-
-Tracks Pub/Sub notification processing to reduce repeated handling of the
-same Pub/Sub event.
-
-
-============================================================
-9. PROCESSED MESSAGE RETENTION
-============================================================
+## 8. Processed Message Retention
 
 Processed Gmail Message IDs are currently retained in KV for approximately:
 
+```text
 90 days
-
+```
 
 The full Gmail email body is not intentionally stored in KV.
-
 
 KV primarily contains:
 
@@ -502,367 +395,295 @@ KV primarily contains:
 - Pub/Sub state
 - Watch expiration metadata
 
+---
 
-============================================================
-10. ORIGINAL GMAIL DUPLICATION PROBLEM
-============================================================
+## 9. Original Gmail Duplication Problem
 
-The first Gmail automation implementation used the following approach:
+The first Gmail automation implementation used this approach:
 
+```text
 Pub/Sub Notification
-    |
-    v
+        |
+        v
 Cloudflare Worker
-    |
-    v
-Search Gmail for recent Inbox messages
-    |
-    v
-Process messages inside a recent time window
+        |
+        v
+Search Recent Inbox Messages
+        |
+        v
+Process Recent Messages
+```
 
+This created an important reliability problem.
 
-This implementation created an important reliability problem.
+A Gmail Pub/Sub notification represents a **mailbox change**. It does not necessarily represent one unique email that should be processed exactly once.
 
-A Gmail Pub/Sub notification represents a mailbox change.
-
-It does NOT necessarily represent a unique email that should be processed
-exactly once.
-
-
-Multiple Gmail notifications could therefore occur while the same email
-remained inside the recent-message search window.
-
+Multiple Gmail notifications could occur while the same email remained inside the recent-message search window.
 
 Every notification caused the Worker to search recent Inbox messages again.
 
-
-The same email could therefore be:
+As a result, the same email could be:
 
 - Retrieved repeatedly
 - Sent to OpenAI repeatedly
 - Classified repeatedly
 - Converted into multiple ClickUp tasks
 
-
 During testing, one email generated several similar ClickUp tasks.
 
+The Pub/Sub subscription was temporarily removed while the Gmail architecture was redesigned.
 
-The Pub/Sub subscription was temporarily removed while the Gmail processing
-architecture was redesigned.
+---
 
-
-============================================================
-11. DUPLICATE PREVENTION REDESIGN
-============================================================
+## 10. Duplicate Prevention Redesign
 
 The Gmail implementation was redesigned around:
 
+```text
 Gmail History API
-+
+        +
 Cloudflare Workers KV
-
+```
 
 New architecture:
 
+```text
 Gmail receives new message
-    |
-    v
-Gmail creates mailbox history event
-    |
-    v
-Pub/Sub sends notification containing historyId
-    |
-    v
-Worker receives notification
-    |
-    v
-Worker reads previous historyId from KV
-    |
-    v
+        |
+        v
+Mailbox history event
+        |
+        v
+Pub/Sub notification
+        |
+        v
+Cloudflare Worker
+        |
+        v
+Read previous History ID from KV
+        |
+        v
 Gmail History API
-    |
-    v
+        |
+        v
 Find messageAdded events
-    |
-    v
-Extract unique Gmail Message IDs
-    |
-    v
+        |
+        v
+Extract unique Message IDs
+        |
+        v
 Check KV
-    |
-    +---- Already processed --> Skip
-    |
-    +---- New message
-              |
-              v
-        Retrieve message
-              |
-              v
-          Analyze email
-              |
-              v
-       Create ClickUp Task
-              |
-              v
-        Mark as processed
+        |
+        +---- Already processed ---> Skip
+        |
+        +---- New message
+                  |
+                  v
+            Retrieve Message
+                  |
+                  v
+              Analyze
+                  |
+                  v
+          Create ClickUp Task
+                  |
+                  v
+          Mark Message Processed
+```
 
+This architecture successfully resolved the observed duplicate-task problem during testing.
 
-This architecture successfully resolved the observed duplicate-task problem
-during testing.
+---
 
+## 11. Gmail History API
 
-============================================================
-12. GMAIL HISTORY API
-============================================================
-
-The Gmail History API is now the primary mechanism used to determine which
-messages are actually new.
-
+The Gmail History API is the primary mechanism used to determine which messages are actually new.
 
 The Worker receives:
 
+```text
 historyId
-
+```
 
 from Gmail through Pub/Sub.
 
+The Worker retrieves:
 
-The Worker then retrieves:
-
+```text
 gmail:last_history_id
-
+```
 
 from KV.
 
+It then calls Gmail conceptually using:
 
-It requests Gmail history using conceptually:
-
+```text
 users.history.list
-
+```
 
 with:
 
+```text
 startHistoryId=<LAST_PROCESSED_HISTORY_ID>
-
 historyTypes=messageAdded
-
 labelId=INBOX
+```
 
+In practical terms, the Worker asks Gmail:
 
-This means the Worker asks Gmail:
+> Which messages were added to the Inbox after the history point that I already processed?
 
-"What messages were added to the Inbox after the history point I already
-processed?"
+---
 
-
-============================================================
-13. GMAIL HISTORY PAGINATION
-============================================================
+## 12. Gmail History Pagination
 
 Gmail History responses can contain multiple pages.
 
-
 The Worker supports:
 
+```text
 nextPageToken
+```
 
+and continues retrieving history until all available pages have been processed.
 
-and continues retrieving history until all available pages have been
-processed.
+Message IDs are collected into an in-memory `Set`.
 
+This provides another deduplication layer before processing begins.
 
-Message IDs are collected into a Set.
+---
 
-
-This provides an additional in-memory deduplication layer before messages
-are processed.
-
-
-============================================================
-14. PER-MESSAGE PROCESSING
-============================================================
+## 13. Per-Message Processing
 
 For every Message ID returned by Gmail History:
 
 1. Check:
 
+```text
 gmail:processed:<MESSAGE_ID>
+```
 
-
-2. If the key exists:
-
-Skip the message.
-
+2. If the key exists, skip the message.
 
 3. Otherwise create temporary processing state:
 
+```text
 gmail:processing:<MESSAGE_ID>
-
+```
 
 4. Retrieve the Gmail message.
 
-
-5. Verify that the message currently has the INBOX label.
-
+5. Verify that it currently has the `INBOX` label.
 
 6. Parse the message.
 
+7. Check whether it originated from the connected mailbox.
 
-7. Check whether the message originated from the connected mailbox.
-
-
-8. Send the relevant message content to OpenAI.
-
+8. Send relevant message content to OpenAI.
 
 9. Determine whether the email represents actionable IT work.
 
+10. If non-actionable, mark it processed.
 
-10. If non-actionable:
+11. If actionable, create the ClickUp task.
 
-Mark the message as processed.
-
-
-11. If actionable:
-
-Create the ClickUp task.
-
-
-12. Only after successful ClickUp creation:
-
-Mark the Gmail message as processed.
-
+12. Only after successful ClickUp creation, mark the Gmail message processed.
 
 13. Remove temporary processing state.
 
+---
 
-============================================================
-15. FAILURE HANDLING
-============================================================
+## 14. Failure Handling
 
 An important reliability rule is:
 
-An actionable Gmail message is NOT marked successfully processed until
-ClickUp confirms that its task was created.
-
+> An actionable Gmail message is not marked successfully processed until ClickUp confirms that its task was created.
 
 Correct sequence:
 
+```text
 Receive Gmail Message
-    |
-    v
+        |
+        v
 AI Analysis
-    |
-    v
+        |
+        v
 Create ClickUp Task
-    |
-    v
+        |
+        v
 ClickUp Success
-    |
-    v
+        |
+        v
 Mark Gmail Message Processed
+```
 
+If OpenAI or ClickUp fails, the message is not permanently marked as successfully processed.
 
-If OpenAI or ClickUp fails:
+This allows it to be retried later.
 
-The message is not permanently marked as successfully processed.
+---
 
-
-This allows the workflow to retry later.
-
-
-============================================================
-16. HISTORY CHECKPOINT ADVANCEMENT
-============================================================
+## 15. History Checkpoint Advancement
 
 The Worker advances:
 
+```text
 gmail:last_history_id
+```
 
-
-only after processing the relevant Gmail History batch successfully.
-
+only after the relevant Gmail History batch is processed successfully.
 
 Example:
 
-History Batch:
-
-Message A
-Message B
-Message C
-
-
-Processing:
-
-A = Success
-B = Success
-C = Failure
-
+```text
+Message A --> Success
+Message B --> Success
+Message C --> Failure
+```
 
 The overall history checkpoint is not advanced.
 
+On retry:
 
-During retry:
+```text
+Message A --> Already processed --> Skip
+Message B --> Already processed --> Skip
+Message C --> Not processed     --> Retry
+```
 
-Message A
-    --> KV says processed
-    --> Skip
+This reduces the possibility of permanently losing an IT request because one operation failed.
 
+---
 
-Message B
-    --> KV says processed
-    --> Skip
-
-
-Message C
-    --> Not processed
-    --> Retry
-
-
-This reduces the possibility of permanently losing an IT request because
-one operation failed.
-
-
-============================================================
-17. INVALID HISTORY ID RECOVERY
-============================================================
+## 16. Invalid History ID Recovery
 
 Gmail History IDs are not permanent.
 
-
 If the stored History ID becomes too old, Gmail may reject it.
 
+The Worker detects this condition.
 
-The Worker detects an invalid/expired history state.
-
-
-Instead of scanning an arbitrary collection of recent emails and risking
-large-scale duplicate creation, the Worker can reset the processing
-baseline to the current Gmail History ID.
-
+Instead of scanning arbitrary recent emails and risking duplicate task creation, the Worker can reset the processing baseline to the current Gmail History ID.
 
 This design prioritizes safe recovery and duplicate prevention.
 
+---
 
-============================================================
-18. GOOGLE CLOUD PROJECT
-============================================================
+## 17. Google Cloud Project
 
 The system uses a dedicated Google Cloud project.
 
+Public placeholders:
 
-Public identifier:
-
+```text
+Project ID:
 <GOOGLE_PROJECT_ID>
 
-
-Project number:
-
+Project Number:
 <GOOGLE_PROJECT_NUMBER>
+```
 
-
-The real production identifiers have intentionally been removed from this
-repository.
-
+The real production identifiers have intentionally been removed.
 
 The project contains/configures:
 
@@ -873,117 +694,107 @@ The project contains/configures:
 - Pub/Sub Subscription
 - Gmail publishing permissions
 
+---
 
-============================================================
-19. GOOGLE OAUTH
-============================================================
+## 18. Google OAuth
 
 A Google OAuth Web Application is configured for the Worker.
 
-
+```text
 OAuth Client:
-
 <GOOGLE_OAUTH_CLIENT>
 
-
 Application Type:
-
 Web Application
+```
 
+Authorized redirect URI:
 
-Authorized Redirect URI:
-
+```text
 https://<WORKER_DOMAIN>/google-oauth-callback
+```
 
+Production OAuth client information and Worker hostname are intentionally omitted.
 
-The production OAuth client information and Worker hostname have
-intentionally been omitted.
+---
 
-
-============================================================
-20. GMAIL OAUTH SCOPE
-============================================================
+## 19. Gmail OAuth Scope
 
 The Gmail integration currently uses:
 
+```text
 https://www.googleapis.com/auth/gmail.readonly
-
+```
 
 The readonly scope was intentionally selected.
 
-
-The automation needs the ability to:
+The automation needs to:
 
 - Read Gmail messages
 - Read Gmail metadata
 - Read Gmail History
 - Support Gmail Watch processing
 
-
-The automation does NOT require permission to:
+The automation does **not** require permission to:
 
 - Send email
 - Delete email
 - Modify email
 
-
 Least-privilege access is preferred wherever practical.
 
+---
 
-============================================================
-21. GOOGLE OAUTH FLOW
-============================================================
+## 20. Google OAuth Flow
 
 Authorization begins at:
 
+```text
 /google-auth
-
+```
 
 The Worker redirects the administrator to Google OAuth.
 
-
 After authorization, Google redirects to:
 
+```text
 /google-oauth-callback
-
+```
 
 The Worker exchanges the temporary authorization code for OAuth tokens.
 
-
 The resulting refresh token is stored as the Cloudflare secret:
 
+```text
 GMAIL_REFRESH_TOKEN
+```
 
+The refresh token is **not** stored in this repository.
 
-The refresh token is NOT stored in this repository.
+When Gmail API access is required, the Worker exchanges the refresh token for a temporary Google access token.
 
+---
 
-When Gmail API access is required, the Worker exchanges the refresh token
-for a temporary Google access token.
-
-
-============================================================
-22. OAUTH STATE PROTECTION
-============================================================
+## 21. OAuth State Protection
 
 The OAuth implementation includes a signed state value.
 
-
 Secret:
 
+```text
 GOOGLE_OAUTH_STATE_SECRET
-
+```
 
 The Worker signs OAuth state using:
 
+```text
 HMAC SHA-256
-
+```
 
 The state contains:
 
 - Timestamp
 - Cryptographic signature
-
 
 When Google redirects back to the Worker, the Worker verifies:
 
@@ -991,29 +802,29 @@ When Google redirects back to the Worker, the Worker verifies:
 - Signature is valid
 - State has not expired
 
-
 The state lifetime is approximately:
 
+```text
 15 minutes
+```
 
+This helps protect the OAuth flow against forged callback requests and CSRF-style OAuth attacks.
 
-This provides protection against forged OAuth callback requests and
-CSRF-style OAuth attacks.
+---
 
-
-============================================================
-23. GMAIL CONNECTION TEST
-============================================================
+## 22. Gmail Connection Test
 
 The Gmail connection can be tested through:
 
+```text
 /test-gmail
+```
 
+The endpoint calls:
 
-The endpoint calls Gmail:
-
+```text
 users.getProfile
-
+```
 
 A successful response confirms that:
 
@@ -1023,461 +834,422 @@ A successful response confirms that:
 - The Worker can obtain an access token
 - The intended mailbox is accessible
 
-
-The production mailbox address has intentionally been removed.
-
+The production mailbox address is intentionally omitted.
 
 Public placeholder:
 
+```text
 <SCHOOL_IT_EMAIL>
+```
 
+---
 
-============================================================
-24. GOOGLE CLOUD PUB/SUB
-============================================================
+## 23. Google Cloud Pub/Sub
 
-Google Cloud Pub/Sub provides event delivery between Gmail and the
-Cloudflare Worker.
-
+Google Cloud Pub/Sub provides event delivery between Gmail and the Cloudflare Worker.
 
 Topic:
 
+```text
 <PUBSUB_TOPIC>
+```
 
+Conceptual full resource:
 
-Full production resource:
-
+```text
 projects/<GOOGLE_PROJECT_ID>/topics/<PUBSUB_TOPIC>
+```
 
+Production resource identifiers are intentionally omitted.
 
-The actual production topic/project identifiers have intentionally been
-replaced with placeholders.
+---
 
+## 24. Gmail Pub/Sub Publisher
 
-============================================================
-25. GMAIL PUB/SUB PUBLISHER
-============================================================
+Gmail requires permission to publish notifications into the configured Pub/Sub Topic.
 
-Gmail requires permission to publish notifications into the configured
-Pub/Sub Topic.
+The Google-managed Gmail publishing identity is granted:
 
-
-The Gmail push notification publishing service is granted:
-
+```text
 Pub/Sub Publisher
-
+```
 
 on the appropriate Topic.
 
+---
 
-The Google-managed Gmail publishing identity is configured according to
-Google's Gmail Push Notification requirements.
-
-
-============================================================
-26. PUB/SUB SUBSCRIPTION
-============================================================
+## 25. Pub/Sub Subscription
 
 A Push Subscription connects the Pub/Sub Topic to the Cloudflare Worker.
 
+Subscription:
 
-Public placeholder:
-
+```text
 <PUBSUB_SUBSCRIPTION>
+```
 
+Delivery type:
 
-Delivery Type:
-
+```text
 Push
+```
 
+Push endpoint:
 
-Push Endpoint:
-
+```text
 https://<WORKER_DOMAIN>/gmail-webhook
+```
 
+Payload unwrapping:
 
-Payload Unwrapping:
-
+```text
 Disabled
-
+```
 
 The Worker therefore receives the normal Google Pub/Sub message envelope.
 
+---
 
-============================================================
-27. PUB/SUB MESSAGE FORMAT
-============================================================
+## 26. Pub/Sub Message Format
 
 Conceptually, the Worker receives:
 
+```json
 {
-    "message": {
-        "data": "<BASE64_GMAIL_NOTIFICATION>",
-        "messageId": "<PUBSUB_MESSAGE_ID>"
-    },
-    "subscription": "<SUBSCRIPTION>"
+  "message": {
+    "data": "<BASE64_GMAIL_NOTIFICATION>",
+    "messageId": "<PUBSUB_MESSAGE_ID>"
+  },
+  "subscription": "<SUBSCRIPTION>"
 }
-
+```
 
 The Worker decodes:
 
+```text
 message.data
-
+```
 
 The decoded Gmail notification contains information such as:
 
+```text
 emailAddress
-
 historyId
+```
 
+---
 
-============================================================
-28. GMAIL WATCH
-============================================================
+## 27. Gmail Watch
 
 Gmail Watch is activated through:
 
+```text
 /gmail-watch
-
+```
 
 The Worker calls:
 
+```text
 users.watch
-
+```
 
 using the configured Pub/Sub Topic.
 
-
 Current label filtering:
 
+```text
 INBOX
-
+```
 
 Behavior:
 
+```text
 INCLUDE
+```
 
+The automation is therefore interested primarily in Inbox-related changes.
 
-This means the automation is interested in Inbox-related changes rather
-than processing every possible mailbox label.
+---
 
-
-============================================================
-29. GMAIL WATCH STATE
-============================================================
+## 28. Gmail Watch State
 
 When Gmail Watch is successfully activated, Gmail returns:
 
+```text
 historyId
-
 expiration
-
+```
 
 The Worker stores these values in KV.
 
-
 Conceptually:
 
-gmail:last_history_id
-    = <HISTORY_ID>
+```text
+gmail:last_history_id = <HISTORY_ID>
 
+gmail:watch_expiration = <EXPIRATION_TIMESTAMP>
+```
 
-gmail:watch_expiration
-    = <EXPIRATION_TIMESTAMP>
+Production History IDs and timestamps are intentionally omitted.
 
+---
 
-Production History IDs and timestamps are intentionally not included in
-this public documentation.
+## 29. Gmail Watch Baseline
 
+When Gmail Watch is activated, the returned History ID establishes the automation baseline.
 
-============================================================
-30. GMAIL WATCH BASELINE
-============================================================
-
-When Gmail Watch is activated, the returned History ID establishes the
-automation baseline.
-
-
-This prevents existing Inbox messages from automatically being interpreted
-as newly-arriving IT requests.
-
-
-Conceptually:
-
+```text
 Existing Mail
-    |
-    |  Gmail Watch activated here
-    v
----------------- BASELINE ----------------
-    |
-    v
+     |
+     | Gmail Watch activated
+     v
+-----------------------------
+       BASELINE
+-----------------------------
+     |
+     v
 New Mail
-    |
-    v
+     |
+     v
 Automation
+```
 
+Existing Inbox messages are therefore not automatically interpreted as newly-arriving requests.
 
-Only mailbox changes after the established baseline should be processed.
+---
 
-
-============================================================
-31. GMAIL WATCH EXPIRATION
-============================================================
+## 30. Gmail Watch Expiration
 
 Gmail Watch registrations expire periodically.
 
+The current implementation allows manual activation or renewal through:
 
-The current implementation can manually activate or renew Gmail Watch
-through:
-
+```text
 /gmail-watch
+```
 
+Automatic renewal has not yet been implemented.
 
-Automatic Watch renewal has not yet been implemented.
+Planned future architecture:
 
-
-Planned future design:
-
+```text
 Cloudflare Scheduled Trigger
-    |
-    v
-Check/Renew Gmail Watch
-    |
-    v
+        |
+        v
+Check Gmail Watch
+        |
+        v
+Renew Gmail Watch
+        |
+        v
 Gmail users.watch
+```
 
+---
 
-This is part of the planned reliability/security hardening phase.
-
-
-============================================================
-32. GMAIL MESSAGE RETRIEVAL
-============================================================
+## 31. Gmail Message Retrieval
 
 New messages identified through Gmail History are retrieved using:
 
+```text
 users.messages.get
-
+```
 
 Format:
 
+```text
 full
+```
 
+Useful headers extracted include:
 
-The Worker extracts useful headers including:
+- Subject
+- From
+- To
+- Cc
+- Date
+- Message-ID
 
-Subject
+---
 
-From
-
-To
-
-Cc
-
-Date
-
-Message-ID
-
-
-============================================================
-33. EMAIL BODY EXTRACTION
-============================================================
+## 32. Email Body Extraction
 
 The Worker attempts to retrieve:
 
+```text
 text/plain
-
+```
 
 before falling back to:
 
+```text
 text/html
+```
 
+If HTML is used, the content is converted into plain text before AI analysis.
 
-If HTML is used, the Worker converts the content into plain text before
-sending it for AI analysis.
+---
 
-
-This reduces unnecessary markup and makes the request easier for the model
-to interpret.
-
-
-============================================================
-34. EMAIL SIZE LIMITING
-============================================================
+## 33. Email Size Limiting
 
 Large email bodies are truncated before AI analysis.
 
+Current approximate maximum:
 
-The current implementation limits the email body sent for analysis to
-approximately:
-
+```text
 15,000 characters
-
+```
 
 This reduces:
 
-- Unnecessary token usage
-- Processing cost
-- Extremely large email chains
-- Excessive unrelated context
+- Token usage
+- API cost
+- Large quoted email chains
+- Unnecessary context
 
+Additional data minimization is planned.
 
-Further data minimization is planned.
+---
 
+## 34. Self-Sent Email Handling
 
-============================================================
-35. SELF-SENT EMAIL HANDLING
-============================================================
+The Worker compares the `From` header with the connected mailbox.
 
-The Worker can compare the email's From header with the connected mailbox.
+Messages originating from the connected IT mailbox can be ignored and marked as processed.
 
+This helps prevent the IT account's own messages from becoming new tasks.
 
-Messages originating from the connected IT mailbox can be ignored and
-marked as processed.
+---
 
+## 35. OpenAI API
 
-This helps prevent the automation from turning the IT technician's own
-outgoing email into a new task.
-
-
-============================================================
-36. OPENAI API
-============================================================
-
-The automation uses the OpenAI API.
-
-
-API style:
-
-Responses API
-
+The automation uses the OpenAI Responses API.
 
 Endpoint:
 
+```text
 https://api.openai.com/v1/responses
+```
 
+Production model:
 
-The specific production model may be configured in the Worker.
-
-
-Public placeholder:
-
+```text
 <OPENAI_MODEL>
+```
 
+The API key is stored as:
 
-The OpenAI API key is stored in:
-
+```text
 OPENAI_API_KEY
+```
 
+The actual API key is never included in source code or public documentation.
 
-The actual API key is never included in source code or documentation.
+---
 
-
-============================================================
-37. OPENAI STORAGE SETTING
-============================================================
+## 36. OpenAI Storage Setting
 
 Responses API requests currently specify:
 
+```javascript
 store: false
+```
 
+This configuration should remain enabled unless the data-handling design is deliberately changed.
 
-This configuration should remain enabled unless there is a deliberate
-reason to change the data handling design.
+---
 
-
-============================================================
-38. STRUCTURED AI OUTPUT
-============================================================
+## 37. Structured AI Output
 
 The system does not rely on free-form AI prose for automation.
 
-
 OpenAI Structured Outputs / JSON Schema are used.
 
+For an actionable request, the expected structure is approximately:
 
-For an actionable IT request, the expected task structure includes:
-
+```json
 {
-    "name": "...",
-    "list": "...",
-    "category": "...",
-    "priority": "...",
-    "description": "...",
-    "location": "...",
-    "nextAction": "...",
-    "waitingOn": "...",
-    "recommendation": "...",
-    "subtasks": []
+  "name": "...",
+  "list": "...",
+  "category": "...",
+  "priority": "...",
+  "description": "...",
+  "location": "...",
+  "nextAction": "...",
+  "waitingOn": "...",
+  "recommendation": "...",
+  "subtasks": []
 }
+```
 
+This makes AI output predictable enough for programmatic processing.
 
-This makes the AI output predictable enough to use programmatically.
+---
 
-
-============================================================
-39. EMAIL ACTIONABILITY CLASSIFICATION
-============================================================
+## 38. Email Actionability Classification
 
 Every new Gmail message is analyzed individually.
 
+The primary decision is:
 
-The first decision is:
-
+```text
 isTask = true
-
-or
-
-isTask = false
-
-
-Conceptual output:
-
-{
-    "isTask": true,
-    "reason": "...",
-    "task": {
-        ...
-    }
-}
-
+```
 
 or:
 
+```text
+isTask = false
+```
+
+Conceptual actionable response:
+
+```json
 {
-    "isTask": false,
-    "reason": "...",
-    "task": null
+  "isTask": true,
+  "reason": "...",
+  "task": {
+    "...": "..."
+  }
 }
+```
 
+Conceptual non-actionable response:
 
-============================================================
-40. ACTIONABLE EMAIL EXAMPLES
-============================================================
+```json
+{
+  "isTask": false,
+  "reason": "...",
+  "task": null
+}
+```
+
+---
+
+## 39. Actionable Email Examples
 
 Examples include:
 
-- Computer problem
-- Chromebook problem
-- Mac problem
-- Printer problem
-- Projector problem
-- Wi-Fi problem
-- Network problem
-- Login/account problem
-- Software problem
-- Device deployment request
-- Configuration request
-- Installation request
-- IT purchasing request
+- Computer problems
+- Chromebook problems
+- Mac problems
+- Printer problems
+- Projector problems
+- Wi-Fi problems
+- Network problems
+- Login/account problems
+- Software problems
+- Device deployment requests
+- Configuration requests
+- Installation requests
+- IT purchasing requests
 - Vendor communication requiring IT action
-- Documentation request
-- Follow-up requiring additional IT action
+- Documentation requests
+- Follow-ups requiring additional IT work
 
+---
 
-============================================================
-41. NON-ACTIONABLE EMAIL EXAMPLES
-============================================================
+## 40. Non-Actionable Email Examples
 
 Examples include:
 
@@ -1490,21 +1262,15 @@ Examples include:
 - Replies requiring no additional IT action
 - Calendar notifications with no IT action
 
+If an email is classified as non-actionable, no ClickUp task is created.
 
-If an email is classified as non-actionable:
+The Gmail message is still marked as processed so it is not repeatedly analyzed.
 
-No ClickUp task is created.
+---
 
+## 41. AI Accuracy Rules
 
-The Gmail message is still marked as processed so the system does not
-repeatedly send it to OpenAI.
-
-
-============================================================
-42. AI ACCURACY RULES
-============================================================
-
-The system prompt instructs the AI to:
+The AI instructions include rules to:
 
 - Never invent facts
 - Never invent locations
@@ -1512,7 +1278,7 @@ The system prompt instructs the AI to:
 - Never invent users
 - Never invent devices
 - Never invent causes
-- Never invent solutions as established facts
+- Never present speculative solutions as established facts
 - Use an empty location when unknown
 - Use an empty Waiting On value when appropriate
 - Avoid unnecessary subtasks
@@ -1520,196 +1286,134 @@ The system prompt instructs the AI to:
 - Avoid creating busywork
 - Separate factual request information from technical recommendations
 
+---
 
-============================================================
-43. CLICKUP INTEGRATION
-============================================================
+## 42. ClickUp Integration
 
 ClickUp acts as the central operational task-management destination.
 
-
 Production identifiers have intentionally been removed.
 
-
+```text
 Workspace:
-
 <CLICKUP_WORKSPACE>
 
-
 Workspace ID:
-
 <CLICKUP_WORKSPACE_ID>
 
-
 Space:
-
 <CLICKUP_SPACE>
 
-
 Space ID:
-
 <CLICKUP_SPACE_ID>
+```
 
+---
 
-============================================================
-44. CLICKUP LISTS
-============================================================
+## 43. ClickUp Lists
 
-The automation currently routes work into the following logical lists:
+### Support Tickets
 
-
-Support Tickets
-
-Production ID:
-
+```text
 <CLICKUP_SUPPORT_LIST_ID>
+```
 
+### IT Projects
 
-------------------------------------------------------------
-
-
-IT Projects
-
-Production ID:
-
+```text
 <CLICKUP_PROJECTS_LIST_ID>
+```
 
+### Maintenance
 
-------------------------------------------------------------
-
-
-Maintenance
-
-Production ID:
-
+```text
 <CLICKUP_MAINTENANCE_LIST_ID>
+```
 
+### Devices & Deployments
 
-------------------------------------------------------------
-
-
-Devices & Deployments
-
-Production ID:
-
+```text
 <CLICKUP_DEVICES_LIST_ID>
+```
 
+### Waiting / Follow-up
 
-------------------------------------------------------------
-
-
-Waiting / Follow-up
-
-Production ID:
-
+```text
 <CLICKUP_WAITING_LIST_ID>
+```
 
+### Documentation
 
-------------------------------------------------------------
-
-
-Documentation
-
-Production ID:
-
+```text
 <CLICKUP_DOCUMENTATION_LIST_ID>
-
+```
 
 All production List IDs have intentionally been removed.
 
+---
 
-============================================================
-45. CLICKUP LIST ROUTING
-============================================================
+## 44. ClickUp List Routing
 
-Support Tickets:
+**Support Tickets**
 
 Normal end-user IT support issues.
 
-
-IT Projects:
+**IT Projects**
 
 Substantial multi-step IT projects.
 
-
-Maintenance:
+**Maintenance**
 
 Recurring or preventive IT work.
 
-
-Devices & Deployments:
+**Devices & Deployments**
 
 Device preparation, deployment, replacement, setup, or enrollment.
 
+**Waiting / Follow-up**
 
-Waiting / Follow-up:
+Tasks primarily blocked by another person, vendor, purchase, approval, or external dependency.
 
-Tasks primarily blocked by another person, vendor, purchase, approval, or
-external dependency.
-
-
-Documentation:
+**Documentation**
 
 Tasks where documentation or a guide is the primary deliverable.
 
+---
 
-============================================================
-46. CLICKUP CATEGORIES
-============================================================
+## 45. ClickUp Categories
 
 Allowed categories:
 
+```text
 Support
-
 Project
-
 Maintenance
-
 Device / Deployment
-
 Documentation
+```
 
+`Waiting` is intentionally not represented as a Category.
 
-Waiting is intentionally not represented as a Category.
+Waiting state is represented separately through:
 
-
-Waiting state is represented separately using:
-
+```text
 Waiting On
+```
 
+---
 
-============================================================
-47. CLICKUP PRIORITIES
-============================================================
+## 46. ClickUp Priorities
 
-AI priorities map to ClickUp priorities.
+| AI Priority | ClickUp Value |
+|---|---:|
+| Urgent | 1 |
+| High | 2 |
+| Normal | 3 |
+| Low | 4 |
 
+### Priority Logic
 
-Urgent
-    -->
-ClickUp Priority 1
-
-
-High
-    -->
-ClickUp Priority 2
-
-
-Normal
-    -->
-ClickUp Priority 3
-
-
-Low
-    -->
-ClickUp Priority 4
-
-
-============================================================
-48. PRIORITY LOGIC
-============================================================
-
-Urgent:
+**Urgent**
 
 - Major outage
 - Security incident
@@ -1717,8 +1421,7 @@ Urgent:
 - Widespread service failure
 - Work-stopping issue requiring immediate response
 
-
-High:
+**High**
 
 - Teaching significantly affected
 - Testing affected
@@ -1726,186 +1429,135 @@ High:
 - Significant staff productivity impact
 - Clearly time-sensitive request
 
-
-Normal:
+**Normal**
 
 - Typical IT request
 - Limited user impact
 - No major urgency
 
-
-Low:
+**Low**
 
 - Minor improvement
 - Cosmetic issue
 - Optional request
 - Non-time-sensitive work
 
+---
 
-============================================================
-49. CLICKUP CUSTOM FIELDS
-============================================================
+## 47. ClickUp Custom Fields
 
-Production ClickUp Custom Field IDs and Option IDs have intentionally been
-removed from this repository.
+Production ClickUp Custom Field IDs and Option IDs have intentionally been removed.
 
+### Waiting On
 
-Logical fields currently used include:
-
-
-Waiting On
-
+```text
 Field ID:
-
 <CUSTOM_FIELD_WAITING_ON>
-
+```
 
 Allowed values:
 
-User
+- User
+- Vendor
+- Purchase
+- Management
+- Facilities
+- Other
 
-Vendor
+### Category
 
-Purchase
-
-Management
-
-Facilities
-
-Other
-
-
-Each option has a production ClickUp Option ID that is maintained outside
-this public documentation.
-
-
-------------------------------------------------------------
-
-
-Category
-
+```text
 Field ID:
-
 <CUSTOM_FIELD_CATEGORY>
-
+```
 
 Allowed values:
 
-Support
+- Support
+- Project
+- Maintenance
+- Device / Deployment
+- Documentation
 
-Project
+### Related Email
 
-Maintenance
-
-Device / Deployment
-
-Documentation
-
-
-------------------------------------------------------------
-
-
-Related Email
-
+```text
 Field ID:
-
 <CUSTOM_FIELD_RELATED_EMAIL>
 
 Type:
-
 URL
+```
 
+### Location
 
-------------------------------------------------------------
-
-
-Location
-
+```text
 Field ID:
-
 <CUSTOM_FIELD_LOCATION>
 
 Type:
-
 Short Text
+```
 
+### Ticket URL
 
-------------------------------------------------------------
-
-
-Ticket URL
-
+```text
 Field ID:
-
 <CUSTOM_FIELD_TICKET_URL>
 
 Type:
-
 URL
+```
 
+### Next Action
 
-------------------------------------------------------------
-
-
-Next Action
-
+```text
 Field ID:
-
 <CUSTOM_FIELD_NEXT_ACTION>
 
 Type:
-
 Short Text
+```
 
+---
 
-============================================================
-50. CLICKUP DESCRIPTION DESIGN
-============================================================
+## 48. ClickUp Description Design
 
 The AI-generated Description contains the factual request summary.
 
-
 The AI-generated Recommendation is appended separately.
-
 
 Conceptually:
 
+```text
 <REQUEST DESCRIPTION>
-
 
 Recommendation:
 
 <AI TECHNICAL RECOMMENDATION>
+```
 
+This intentionally separates:
 
-This separation is intentional.
-
-
-It helps distinguish:
-
-What the user actually reported
+**What the user actually reported**
 
 from:
 
-What the AI recommends doing about it
+**What the AI recommends doing about it**
 
+---
 
-============================================================
-51. CLICKUP SUBTASKS
-============================================================
+## 49. ClickUp Subtasks
 
-OpenAI may generate subtasks when they provide meaningful operational
-value.
-
+OpenAI may generate subtasks when they provide meaningful operational value.
 
 The Worker first creates the parent ClickUp task.
 
-
 It then creates each subtask as a child of that parent.
 
+Example:
 
-Conceptual example:
-
+```text
 Parent:
 
 Troubleshoot classroom printer offline
@@ -1918,124 +1570,116 @@ Subtasks:
 - Test connectivity
 - Check workstation print queue
 - Perform test print
-
+```
 
 Subtasks are not required for every request.
 
+---
 
-============================================================
-52. RELATED GMAIL MESSAGE
-============================================================
+## 50. Related Gmail Message
 
-For Gmail-generated tasks, the Worker creates a Gmail link associated with
-the original Message ID.
-
+For Gmail-generated tasks, the Worker creates a Gmail link associated with the original Message ID.
 
 Conceptual format:
 
+```text
 https://mail.google.com/mail/u/0/#all/<MESSAGE_ID>
+```
 
+The URL is placed into the ClickUp `Related Email` custom field.
 
-The URL is placed into the ClickUp:
+This allows the IT technician to move from ClickUp back to the original Gmail conversation.
 
-Related Email
+---
 
-custom field.
-
-
-This allows the IT technician to move from the ClickUp task back to the
-original Gmail conversation.
-
-
-============================================================
-53. JIRA SERVICE MANAGEMENT
-============================================================
+## 51. Jira Service Management
 
 Jira Service Management is another input source for the automation.
 
-
 Production project information has been generalized.
 
-
+```text
 Project:
-
 <JIRA_PROJECT>
 
-
 Project Key:
-
 <JIRA_PROJECT_KEY>
+```
 
+Jira Automation trigger:
 
-Jira Automation Trigger:
-
+```text
 Work item created
-
+```
 
 Action:
 
+```text
 Send web request
-
+```
 
 Destination:
 
+```text
 https://<WORKER_DOMAIN>/jira-webhook
-
+```
 
 Method:
 
+```text
 POST
+```
 
+---
 
-============================================================
-54. JIRA WEBHOOK PAYLOAD
-============================================================
+## 52. Jira Webhook Payload
 
-The Jira Automation sends structured information similar to:
+Jira sends structured JSON similar to:
 
+```json
 {
-    "key": "{{issue.key}}",
-    "summary": {{issue.summary.asJsonString}},
-    "description": {{issue.description.asJsonString}},
-    "reporter": {{issue.reporter.displayName.asJsonString}},
-    "issueType": {{issue.issueType.name.asJsonString}},
-    "priority": {{issue.priority.name.asJsonString}},
-    "requestType": {{issue.Request Type.requestType.name.asJsonString}},
-    "url": "{{baseUrl}}/browse/{{issue.key}}"
+  "key": "{{issue.key}}",
+  "summary": {{issue.summary.asJsonString}},
+  "description": {{issue.description.asJsonString}},
+  "reporter": {{issue.reporter.displayName.asJsonString}},
+  "issueType": {{issue.issueType.name.asJsonString}},
+  "priority": {{issue.priority.name.asJsonString}},
+  "requestType": {{issue.Request Type.requestType.name.asJsonString}},
+  "url": "{{baseUrl}}/browse/{{issue.key}}"
 }
+```
 
+---
 
-============================================================
-55. JIRA WEBHOOK AUTHENTICATION
-============================================================
+## 53. Jira Webhook Authentication
 
 The Jira webhook includes a custom header:
 
+```text
 X-Ridgeline-Webhook-Secret
-
+```
 
 The corresponding Worker secret is:
 
+```text
 JIRA_WEBHOOK_SECRET
+```
 
+The production value is not included in the repository.
 
-The production value is not included in this repository.
-
-
-The Worker verifies the provided value before processing the Jira event.
-
+The Worker verifies the provided value before processing the event.
 
 Invalid requests receive:
 
+```text
 HTTP 401 Unauthorized
+```
 
+---
 
-============================================================
-56. JIRA AI PROCESSING
-============================================================
+## 54. Jira AI Processing
 
 Useful Jira information is converted into AI input.
-
 
 This may include:
 
@@ -2047,44 +1691,33 @@ This may include:
 - Jira Priority
 - Reporter
 
+OpenAI generates the same standardized task structure used by the Gmail and manual workflows.
 
-OpenAI then generates the same standardized task structure used elsewhere
-in the system.
+The original Jira ticket URL is written into the ClickUp `Ticket URL` field.
 
+---
 
-The original Jira ticket URL is written into the ClickUp:
-
-Ticket URL
-
-custom field.
-
-
-============================================================
-57. MANUAL AI TASK CREATOR
-============================================================
+## 55. Manual AI Task Creator
 
 The Cloudflare Worker also hosts a manual interface.
 
-
-This allows IT staff to create AI-assisted tasks that did not originate
-from Gmail or Jira.
-
+This allows IT staff to create AI-assisted tasks that did not originate from Gmail or Jira.
 
 Examples:
 
-- Verbal request from staff
-- Problem discovered during troubleshooting
-- Infrastructure improvement idea
+- Verbal staff requests
+- Problems discovered during troubleshooting
+- Infrastructure improvement ideas
 - Maintenance work
-- Device deployment
-- Documentation task
-- Administrative IT project
+- Device deployments
+- Documentation tasks
+- Administrative IT projects
 
+---
 
-============================================================
-58. MANUAL AI WORKFLOW
-============================================================
+## 56. Manual AI Workflow
 
+```text
 IT Request
     |
     v
@@ -2110,11 +1743,11 @@ POST /create
     |
     v
 ClickUp API
+```
 
+---
 
-============================================================
-59. MANUAL TASK PREVIEW
-============================================================
+## 57. Manual Task Preview
 
 Before creating a task, the interface allows editing fields including:
 
@@ -2129,147 +1762,114 @@ Before creating a task, the interface allows editing fields including:
 - AI Recommendation
 - Subtasks
 
+This provides human review before manually generated tasks are submitted.
 
-This provides human review before manual AI-generated tasks are submitted.
+---
 
-
-============================================================
-60. SYSTEM STATUS
-============================================================
+## 58. System Status
 
 The Worker includes:
 
+```text
 /status
-
-
-This endpoint checks whether required configuration is available.
-
+```
 
 A healthy system conceptually reports:
 
+```json
 {
-    "success": true,
-    "services": {
-        "openai": true,
-        "clickup": true,
-        "jira": true,
-        "googleClient": true,
-        "googleOAuthSecurity": true,
-        "gmailAuthorized": true,
-        "gmailStateKV": true
-    }
+  "success": true,
+  "services": {
+    "openai": true,
+    "clickup": true,
+    "jira": true,
+    "googleClient": true,
+    "googleOAuthSecurity": true,
+    "gmailAuthorized": true,
+    "gmailStateKV": true
+  }
 }
+```
 
+This endpoint reports configuration presence.
 
-This endpoint reports whether configuration is present.
+It does **not** return secret values.
 
+---
 
-It does NOT return secret values.
-
-
-============================================================
-61. OPENAI CONNECTION TEST
-============================================================
+## 59. OpenAI Connection Test
 
 Endpoint:
 
+```text
 /test-openai
-
+```
 
 Purpose:
 
-Verify that:
+- Verify `OPENAI_API_KEY`
+- Verify OpenAI API connectivity
+- Verify the configured model is available
+- Verify the Worker can receive a valid response
 
-- OPENAI_API_KEY is configured
-- OpenAI API is reachable
-- The configured model is available
-- The Worker can receive a valid response
+---
 
-
-============================================================
-62. GMAIL CONNECTION TEST
-============================================================
+## 60. Gmail Connection Test
 
 Endpoint:
 
+```text
 /test-gmail
-
+```
 
 Purpose:
 
-Verify that:
-
-- Google OAuth credentials work
-- Refresh token works
-- Access token generation works
-- Gmail API is reachable
-- Connected mailbox is accessible
-
+- Verify Google OAuth credentials
+- Verify the refresh token
+- Verify access-token generation
+- Verify Gmail API connectivity
+- Verify mailbox access
 
 Mailbox information should not be included in public documentation.
 
+---
 
-============================================================
-63. SUCCESSFUL END-TO-END GMAIL TEST
-============================================================
+## 61. Successful End-to-End Gmail Test
 
-After implementing Gmail History API and KV deduplication, the complete
-workflow was tested.
-
+After implementing Gmail History API and KV deduplication, the complete workflow was tested.
 
 Test sequence:
 
 1. Gmail Watch was activated.
-
 2. Gmail History baseline was stored.
-
 3. Pub/Sub Push Subscription was enabled.
-
 4. A completely new test email was sent.
-
 5. Gmail generated a mailbox change.
-
 6. Gmail published the event to Pub/Sub.
-
 7. Pub/Sub pushed the event to the Cloudflare Worker.
-
 8. The Worker retrieved the previous History ID.
-
 9. The Worker queried Gmail History.
-
 10. The Worker identified the new Message ID.
-
 11. The Worker verified that the Message ID had not been processed.
-
 12. The Worker retrieved the email.
-
 13. OpenAI analyzed the email.
-
 14. OpenAI classified the email as actionable.
-
 15. OpenAI generated structured task information.
-
 16. The Worker created the ClickUp parent task.
-
-17. The Worker created relevant custom fields/subtasks.
-
+17. Relevant custom fields and subtasks were created.
 18. The Worker marked the Gmail Message ID as processed.
-
 19. The Worker advanced the Gmail History checkpoint.
+20. Exactly **one** ClickUp task was created.
 
-20. Exactly ONE ClickUp task was created.
+This confirmed that the previously observed duplicate-task problem had been resolved during testing.
 
+---
 
-This confirmed that the previously observed duplicate-task problem had
-been resolved during testing.
-
-
-============================================================
-64. CURRENT DATA FLOW
-============================================================
+## 62. Current Data Flow
 
 For an actionable Gmail message:
 
+```text
 Gmail
     |
     v
@@ -2289,105 +1889,65 @@ Cloudflare Worker
     |
     v
 ClickUp
-
+```
 
 The complete Gmail body is not intentionally stored in Workers KV.
 
+---
 
-============================================================
-65. SECURITY ARCHITECTURE ALREADY PRESENT
-============================================================
+## 63. Security Controls Already Present
 
-The project already includes several security controls.
-
+The project already includes several security controls:
 
 1. Secrets are stored outside source code using Cloudflare Worker Secrets.
-
-
 2. Gmail uses a readonly OAuth scope.
-
-
 3. Google OAuth state is cryptographically signed.
-
-
 4. OAuth state has a short expiration period.
-
-
 5. Jira webhook requests require a secret.
-
-
-6. OpenAI requests currently use:
-
-store: false
-
-
+6. OpenAI requests currently use `store: false`.
 7. Gmail email bodies are not intentionally persisted in Workers KV.
-
-
 8. Public documentation does not contain production secrets.
+9. Infrastructure identifiers in this public README are intentionally generalized.
 
+---
 
-9. Infrastructure identifiers in this public README are intentionally
-generalized.
+## 64. Security Hardening Not Yet Complete
 
-
-============================================================
-66. SECURITY HARDENING NOT YET COMPLETE
-============================================================
-
-IMPORTANT:
-
-The system is functional, but final security hardening has not yet been
-completed.
-
-
-The remaining security work is intentionally documented rather than hidden.
-
+The system is functional, but final security hardening has not yet been completed.
 
 Primary remaining areas:
 
-1. Gmail Pub/Sub webhook authentication
+- [ ] Gmail Pub/Sub webhook authentication
+- [ ] AI data minimization
+- [ ] School privacy/data-policy review
+- [ ] Production logging review
+- [ ] Credential rotation procedures
+- [ ] Automatic Gmail Watch renewal
+- [ ] Final production security assessment
 
-2. AI data minimization
+---
 
-3. School privacy/data policy review
-
-4. Production logging review
-
-5. Credential rotation procedures
-
-6. Automatic Gmail Watch renewal
-
-7. Final production security assessment
-
-
-============================================================
-67. GMAIL WEBHOOK SECURITY
-============================================================
+## 65. Gmail Webhook Security
 
 Current endpoint:
 
+```text
 POST /gmail-webhook
-
+```
 
 Conceptual production URL:
 
+```text
 https://<WORKER_DOMAIN>/gmail-webhook
-
+```
 
 The endpoint is internet-accessible.
 
-
-The current Gmail Pub/Sub Push configuration has not yet received final
-authentication hardening.
-
+The current Gmail Pub/Sub Push configuration has not yet received final authentication hardening.
 
 This is a known security item.
 
-
-Future implementation should verify that webhook requests genuinely
-originate through the intended Google Pub/Sub path.
-
+Future implementation should verify that webhook requests genuinely originate through the intended Google Pub/Sub path.
 
 Potential approaches include:
 
@@ -2396,22 +1956,15 @@ Potential approaches include:
 - Additional request validation
 - Appropriate Cloudflare-side access controls
 
+This should be completed before considering the system fully hardened for production.
 
-This should be completed before considering the system fully hardened for
-production.
+---
 
+## 66. AI Data Minimization
 
-============================================================
-68. AI DATA MINIMIZATION
-============================================================
+The current system sends relevant email content to OpenAI so that the AI can determine whether a message represents an IT task.
 
-The current system sends relevant email content to OpenAI so that the AI
-can determine whether the message represents an IT task.
-
-
-Future improvements should reduce unnecessary information before external
-processing.
-
+Future improvements should reduce unnecessary information before external processing.
 
 Potential improvements include:
 
@@ -2424,17 +1977,13 @@ Potential improvements include:
 - Restrict AI processing to appropriate IT-related content
 - Define which school data categories are permitted to be processed
 
+---
 
-============================================================
-69. SCHOOL DATA PRIVACY
-============================================================
+## 67. School Data Privacy
 
-Technical security does not automatically equal organizational
-authorization.
+Technical security does not automatically equal organizational authorization.
 
-
-Before processing potentially sensitive school information, the production
-deployment should consider applicable:
+Before processing potentially sensitive school information, the production deployment should consider applicable:
 
 - School policies
 - Student privacy requirements
@@ -2444,17 +1993,13 @@ deployment should consider applicable:
 - Administrative approval
 - Applicable legal requirements
 
-
 The project should use data minimization wherever practical.
 
+---
 
-============================================================
-70. SECRET MANAGEMENT
-============================================================
+## 68. Secret Management
 
-Secrets should continue to be managed through Cloudflare Worker Secrets or
-an equivalent secure secret-management mechanism.
-
+Secrets should continue to be managed through Cloudflare Worker Secrets or an equivalent secure secret-management mechanism.
 
 Secrets should never appear in:
 
@@ -2466,13 +2011,11 @@ Secrets should never appear in:
 - Application logs
 - Public documentation
 
-
 Secrets should be rotated when appropriate.
 
+---
 
-============================================================
-71. LOGGING
-============================================================
+## 69. Logging
 
 Production logging should avoid unnecessarily recording:
 
@@ -2485,160 +2028,123 @@ Production logging should avoid unnecessarily recording:
 - Webhook secrets
 - Sensitive request payloads
 
+Operational logging should follow this principle:
 
-Operational logging should follow the principle:
+> Log enough to troubleshoot the automation, but not enough to unnecessarily reproduce private content.
 
-Log enough to troubleshoot the automation,
-but not enough to unnecessarily reproduce private content.
+---
 
-
-============================================================
-72. CREDENTIAL ROTATION
-============================================================
+## 70. Credential Rotation
 
 Future operational documentation should define procedures for rotating:
 
+```text
 OPENAI_API_KEY
-
 CLICKUP_API_TOKEN
-
 GOOGLE_CLIENT_SECRET
-
 GOOGLE_OAUTH_STATE_SECRET
-
 GMAIL_REFRESH_TOKEN
-
 JIRA_WEBHOOK_SECRET
+```
 
+The documentation should also describe what services must be restarted or reauthorized after each credential is rotated.
 
-The documentation should also describe what services must be restarted or
-reauthorized after each credential is rotated.
+---
 
-
-============================================================
-73. GMAIL WATCH AUTOMATION
-============================================================
+## 71. Gmail Watch Automation
 
 Gmail Watch expires periodically.
 
-
 Currently it can be renewed manually.
-
 
 Future implementation should automate renewal.
 
-
-Possible design:
-
+```text
 Cloudflare Cron Trigger
-    |
-    v
-Scheduled Worker Handler
-    |
-    v
+        |
+        v
+Scheduled Worker
+        |
+        v
 Check Watch Expiration
-    |
-    v
+        |
+        v
 Renew Gmail Watch
+```
 
+This reduces the risk of Gmail automation silently stopping because a Watch expired.
 
-This removes the operational risk of Gmail automation silently stopping
-because a Watch expired.
+---
 
+## 72. KV Consistency Consideration
 
-============================================================
-74. KV CONSISTENCY CONSIDERATION
-============================================================
-
-Cloudflare Workers KV provides practical state storage and deduplication for
-the current low-volume IT workflow.
-
+Cloudflare Workers KV provides practical state storage and deduplication for the current low-volume IT workflow.
 
 However, Workers KV is eventually consistent.
 
+It is not a transactional database and should not be treated as a strict distributed lock.
 
-It is not a transactional database and should not be treated as a strict
-distributed lock.
+The current architecture significantly improves reliability compared with the original recent-message scanning implementation.
 
+If future requirements demand stronger exact-once processing guarantees, possible alternatives include:
 
-The current architecture significantly improves reliability compared with
-the original recent-message scanning implementation.
+- Cloudflare Durable Objects
+- Cloudflare D1 with a unique constraint
 
+---
 
-If future requirements demand stronger exact-once processing guarantees,
-possible alternatives include:
+## 73. Current Reliability Model
 
-Cloudflare Durable Objects
+The system uses multiple layers to reduce duplicate Gmail tasks.
 
-or
-
-Cloudflare D1 with a unique database constraint
-
-
-============================================================
-75. CURRENT RELIABILITY MODEL
-============================================================
-
-The current system uses multiple layers to reduce duplicate Gmail tasks:
-
-
-Layer 1:
-
-Gmail History API
+### Layer 1 — Gmail History API
 
 Only mailbox changes after the previous checkpoint are requested.
 
-
-Layer 2:
-
-In-memory Set
+### Layer 2 — In-Memory Set
 
 Duplicate Message IDs inside a History response are collapsed.
 
+### Layer 3 — Processed Message State
 
-Layer 3:
-
+```text
 gmail:processed:<MESSAGE_ID>
+```
 
 Previously completed messages are skipped.
 
+### Layer 4 — Processing State
 
-Layer 4:
-
+```text
 gmail:processing:<MESSAGE_ID>
+```
 
 Temporary processing state reduces overlapping work.
 
+### Layer 5 — Pub/Sub State
 
-Layer 5:
-
+```text
 gmail:pubsub:<PUBSUB_MESSAGE_ID>
+```
 
 Previously handled Pub/Sub notifications can be recognized.
 
+Together, these provide practical duplicate prevention for the current workflow.
 
-Together these provide practical duplicate prevention for the current
-workflow.
+---
 
+## 74. GitHub Security Rules
 
-============================================================
-76. IMPORTANT GITHUB SECURITY RULES
-============================================================
+### Never Commit
 
-NEVER COMMIT:
-
+```text
 OPENAI_API_KEY
-
 CLICKUP_API_TOKEN
-
 GOOGLE_CLIENT_SECRET
-
 GOOGLE_OAUTH_STATE_SECRET
-
 GMAIL_REFRESH_TOKEN
-
 JIRA_WEBHOOK_SECRET
-
+```
 
 Also never commit:
 
@@ -2652,31 +2158,27 @@ Also never commit:
 - Screenshots containing credentials
 - Local secret files
 
+---
 
-============================================================
-77. RECOMMENDED .GITIGNORE
-============================================================
+## 75. Recommended `.gitignore`
 
-At minimum, local environment/secret files should be excluded.
+At minimum:
 
-
-Example:
-
+```gitignore
 .env
 .env.*
 .dev.vars
 *.secret
 secrets.json
+```
 
+Additional IDE and runtime-specific exclusions can be added as necessary.
 
-Additional IDE/runtime-specific exclusions can be added as necessary.
+---
 
+## 76. Public vs. Private Configuration
 
-============================================================
-78. PUBLIC VS PRIVATE CONFIGURATION
-============================================================
-
-The public repository should contain:
+### Appropriate for the Public Repository
 
 - Application source code
 - Generic architecture
@@ -2685,26 +2187,22 @@ The public repository should contain:
 - Environment variable names
 - Placeholder resource identifiers
 
-
-The public repository should NOT contain:
+### Keep Private
 
 - Production credentials
-- Production OAuth tokens
-- Production refresh tokens
-- Production webhook secrets
+- OAuth tokens
+- Refresh tokens
+- Webhook secrets
 - Sensitive school data
+- Unnecessary internal infrastructure identifiers
 
+---
 
-Internal infrastructure identifiers should also be generalized when they
-are not necessary for understanding the project.
+## 77. Example Public Configuration
 
+A public example configuration can use placeholders:
 
-============================================================
-79. EXAMPLE PUBLIC CONFIGURATION
-============================================================
-
-A public example configuration may look like:
-
+```text
 WORKER_DOMAIN=<WORKER_DOMAIN>
 
 GOOGLE_PROJECT_ID=<GOOGLE_PROJECT_ID>
@@ -2718,10 +2216,11 @@ CLICKUP_WORKSPACE_ID=<CLICKUP_WORKSPACE_ID>
 CLICKUP_SUPPORT_LIST_ID=<CLICKUP_SUPPORT_LIST_ID>
 
 OPENAI_MODEL=<OPENAI_MODEL>
+```
 
+Secret variables should contain placeholders only:
 
-Secret values should only be represented by variable names:
-
+```text
 OPENAI_API_KEY=<SECRET>
 
 CLICKUP_API_TOKEN=<SECRET>
@@ -2731,12 +2230,13 @@ GOOGLE_CLIENT_SECRET=<SECRET>
 GMAIL_REFRESH_TOKEN=<SECRET>
 
 JIRA_WEBHOOK_SECRET=<SECRET>
+```
 
+---
 
-============================================================
-80. CURRENT END-TO-END ARCHITECTURE
-============================================================
+## 78. Complete End-to-End Architecture
 
+```text
                          GMAIL
                            |
                            v
@@ -2807,116 +2307,67 @@ JIRA_WEBHOOK_SECRET=<SECRET>
                            |
                            v
                        ClickUp
+```
 
+---
 
-============================================================
-81. PROJECT PHASES
-============================================================
+## 79. Project Phases
 
-PHASE 1 — CORE AUTOMATION
+### Phase 1 — Core Automation
 
-[X] Cloudflare Worker
+- [x] Cloudflare Worker
+- [x] ClickUp integration
+- [x] OpenAI integration
+- [x] Manual AI Task Creator
+- [x] Jira automation
 
-[X] ClickUp integration
+### Phase 2 — Gmail Automation
 
-[X] OpenAI integration
+- [x] Google Cloud project
+- [x] OAuth
+- [x] Gmail API
+- [x] Gmail Watch
+- [x] Pub/Sub Topic
+- [x] Pub/Sub Subscription
+- [x] Gmail → Worker
+- [x] Gmail → AI
+- [x] AI → ClickUp
 
-[X] Manual AI Task Creator
+### Phase 3 — Gmail Reliability
 
-[X] Jira automation
+- [x] Identify duplicate-task problem
+- [x] Disable faulty subscription during troubleshooting
+- [x] Create Workers KV state storage
+- [x] Replace recent-message scanning
+- [x] Implement Gmail History API
+- [x] Implement Message ID deduplication
+- [x] Implement processing state
+- [x] Implement History checkpoint
+- [x] Re-enable Pub/Sub
+- [x] Perform end-to-end test
+- [x] Confirm one test email creates one task
 
+### Phase 4 — Security Hardening
 
-------------------------------------------------------------
+- [ ] Authenticate Gmail webhook
+- [ ] Improve data minimization
+- [ ] Review sensitive school information handling
+- [ ] Review production logs
+- [ ] Establish credential rotation procedures
+- [ ] Final security assessment
 
+### Phase 5 — Operational Reliability
 
-PHASE 2 — GMAIL AUTOMATION
+- [ ] Automatic Gmail Watch renewal
+- [ ] Monitoring and alerting
+- [ ] Error reporting
+- [ ] Recovery documentation
+- [ ] Production runbook
+- [ ] Backup/recovery strategy for configuration
 
-[X] Google Cloud project
+---
 
-[X] OAuth
-
-[X] Gmail API
-
-[X] Gmail Watch
-
-[X] Pub/Sub Topic
-
-[X] Pub/Sub Subscription
-
-[X] Gmail → Worker
-
-[X] Gmail → AI
-
-[X] AI → ClickUp
-
-
-------------------------------------------------------------
-
-
-PHASE 3 — GMAIL RELIABILITY
-
-[X] Identify duplicate-task problem
-
-[X] Disable faulty subscription during troubleshooting
-
-[X] Create Workers KV state storage
-
-[X] Replace recent-message scanning
-
-[X] Implement Gmail History API
-
-[X] Implement Message ID deduplication
-
-[X] Implement processing state
-
-[X] Implement History checkpoint
-
-[X] Re-enable Pub/Sub
-
-[X] Perform end-to-end test
-
-[X] Confirm one email creates one task during testing
-
-
-------------------------------------------------------------
-
-
-PHASE 4 — SECURITY HARDENING
-
-[ ] Authenticate Gmail webhook
-
-[ ] Improve data minimization
-
-[ ] Review sensitive school information handling
-
-[ ] Review production logs
-
-[ ] Establish credential rotation
-
-[ ] Final security assessment
-
-
-------------------------------------------------------------
-
-
-PHASE 5 — OPERATIONAL RELIABILITY
-
-[ ] Automatic Gmail Watch renewal
-
-[ ] Monitoring/alerting
-
-[ ] Error reporting
-
-[ ] Recovery documentation
-
-[ ] Production runbook
-
-[ ] Backup/recovery strategy for configuration
-
-
-============================================================
-82. FUTURE IMPROVEMENTS
-============================================================
+## 80. Future Improvements
 
 Possible future improvements include:
 
@@ -2930,7 +2381,7 @@ Possible future improvements include:
 - Failed-task retry queue
 - Dead-letter processing
 - Better observability
-- ClickUp task duplicate detection
+- ClickUp duplicate detection
 - Jira duplicate detection
 - Stronger transactional state storage
 - Durable Objects or D1
@@ -2938,128 +2389,90 @@ Possible future improvements include:
 - Administrative audit logging
 - Automated workflow health notifications
 
+---
 
-============================================================
-83. DESIGN PRINCIPLES
-============================================================
+## 81. Design Principles
 
-The project follows several core design principles:
+### 1. Automate Repetitive Administration
 
+IT time should be spent solving problems rather than repeatedly copying information between systems.
 
-1. AUTOMATE REPETITIVE ADMINISTRATION
+### 2. Keep a Human-Readable Task System
 
-IT time should be spent solving problems rather than repeatedly copying
-information between systems.
+ClickUp remains the central place where IT work can be reviewed and managed.
 
+### 3. Use AI for Classification and Organization
 
-2. KEEP A HUMAN-READABLE TASK SYSTEM
+AI assists with understanding and structuring requests rather than directly performing unrestricted administrative actions.
 
-ClickUp remains the central place where IT work can be reviewed and
-managed.
+### 4. Use Structured Output
 
+AI responses are constrained through JSON Schema rather than relying on free-form text.
 
-3. USE AI FOR CLASSIFICATION AND ORGANIZATION
+### 5. Minimize Permissions
 
-AI assists with understanding and structuring requests rather than directly
-performing unrestricted administrative actions.
+For example, Gmail currently uses readonly access rather than broader Gmail permissions.
 
+### 6. Confirm Downstream Success
 
-4. USE STRUCTURED OUTPUT
+A Gmail message is not marked processed until required downstream work succeeds.
 
-AI responses are constrained through JSON Schema rather than relying on
-free-form text.
+### 7. Prevent Duplicate Work
 
+History checkpoints and per-message state reduce duplicate tasks.
 
-5. MINIMIZE PERMISSIONS
-
-For example, Gmail currently uses readonly access rather than broader Gmail
-permissions.
-
-
-6. DO NOT MARK WORK COMPLETE BEFORE THE DESTINATION CONFIRMS SUCCESS
-
-A Gmail message is not marked processed until required downstream work
-succeeds.
-
-
-7. PREVENT DUPLICATE WORK
-
-History checkpoints and per-message state are used to reduce duplicate
-tasks.
-
-
-8. DO NOT STORE SECRETS IN SOURCE CODE
+### 8. Never Store Secrets in Source Code
 
 Credentials belong in secure environment configuration.
 
-
-9. DOCUMENT KNOWN SECURITY LIMITATIONS
+### 9. Document Known Security Limitations
 
 Known security issues should be documented and fixed rather than hidden.
 
-
-10. MINIMIZE SENSITIVE DATA
+### 10. Minimize Sensitive Data
 
 Only information necessary for the workflow should be processed or retained.
 
+---
 
-============================================================
-84. PROJECT SUMMARY
-============================================================
+## 82. Project Summary
 
 Ridgeline IT Automation is an AI-assisted IT workflow system connecting:
 
-Gmail
+- Gmail
+- Jira Service Management
+- Cloudflare Workers
+- Google Cloud Pub/Sub
+- Gmail History API
+- Cloudflare Workers KV
+- OpenAI API
+- ClickUp
 
-Jira Service Management
+The system can automatically identify incoming IT work, determine whether it requires action, classify it, prioritize it, generate operational information, and create organized ClickUp tasks.
 
-Cloudflare Workers
-
-Google Cloud Pub/Sub
-
-Gmail History API
-
-Cloudflare Workers KV
-
-OpenAI API
-
-ClickUp
-
-
-The system can automatically identify incoming IT work, determine whether
-it requires action, classify it, prioritize it, generate useful operational
-information, and create organized ClickUp tasks.
-
-
-The original Gmail implementation relied on scanning recent Inbox messages
-after every Pub/Sub notification.
-
+The original Gmail implementation relied on scanning recent Inbox messages after every Pub/Sub notification.
 
 That approach resulted in duplicate ClickUp tasks.
 
-
 The Gmail architecture was redesigned around:
 
+```text
 Gmail History API
-+
+        +
 Cloudflare Workers KV
-+
-Per-message processing state
-+
-History checkpoints
+        +
+Per-Message Processing State
+        +
+History Checkpoints
+```
 
+After the redesign, end-to-end testing successfully produced one ClickUp task from one new test email without the previously observed duplication.
 
-After the redesign, end-to-end testing successfully produced one ClickUp
-task from one new test email without the previously observed duplication.
-
-
-The core automation and reliability phases are therefore functional.
-
+The core automation and reliability phases are functional.
 
 The next major project phase is:
 
-SECURITY HARDENING
-
+**Security Hardening**
 
 This includes:
 
@@ -3071,25 +2484,17 @@ This includes:
 - Automating Gmail Watch renewal
 - Performing a final production security review
 
+---
 
-============================================================
-85. PUBLIC REPOSITORY DISCLAIMER
-============================================================
+## 83. Public Repository Disclaimer
 
-This repository documents the architecture and implementation of the
-project while intentionally excluding production-sensitive information.
+This repository documents the architecture and implementation of the project while intentionally excluding production-sensitive information.
 
+Names and descriptions of technologies and APIs are retained where useful for understanding the architecture.
 
-Names and descriptions of technologies and APIs are retained where useful
-for understanding the architecture.
+Infrastructure-specific identifiers have been replaced with generic placeholders such as:
 
-
-However, infrastructure-specific identifiers have been replaced with
-generic placeholders.
-
-
-Examples include:
-
+```text
 <WORKER_DOMAIN>
 
 <GOOGLE_PROJECT_ID>
@@ -3109,14 +2514,10 @@ Examples include:
 <CLICKUP_LIST_ID>
 
 <CUSTOM_FIELD_ID>
-
+```
 
 These placeholders are intentional.
 
+They should **not** be replaced with production values in a public repository.
 
-They should NOT be replaced with production values in the public
-repository.
-
-
-Production configuration should remain in the appropriate secured
-administrative systems and environment configuration.
+Production configuration should remain in the appropriate secured administrative systems and environment configuration.
