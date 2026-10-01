@@ -48,7 +48,7 @@ Production credentials and identifiers are maintained separately through the app
 
 ## 1. Project Purpose
 
-Ridgeline IT Automation is an automation system designed to reduce the manual administrative work involved in school IT support.
+IT Workflow Automation is an automation system designed to reduce the manual administrative work involved in school IT support.
 
 The system connects:
 
