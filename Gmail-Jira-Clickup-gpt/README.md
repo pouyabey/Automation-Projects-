@@ -1,4 +1,4 @@
-# Ridgeline IT Automation
+# IT Workflow Automation
 
 **Gmail + Jira + OpenAI API + Cloudflare Workers + ClickUp**
 
