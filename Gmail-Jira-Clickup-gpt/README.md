@@ -13,7 +13,7 @@ This repository intentionally uses generic placeholders for internal infrastruct
 The following values have been removed, redacted, or replaced with generic examples for security and privacy reasons:
 
 - Production Worker hostname
-- School email addresses
+- Organization email addresses
 - Google Cloud Project ID and Project Number
 - Google OAuth client information
 - Google Pub/Sub resource identifiers
@@ -25,7 +25,8 @@ The following values have been removed, redacted, or replaced with generic examp
 - OAuth tokens
 - API tokens
 - Webhook secrets
-- Other environment-specific identifiers
+- Organization-specific names and identifiers
+- Other environment-specific information
 
 Examples in this documentation use placeholders such as:
 
@@ -35,7 +36,7 @@ Examples in this documentation use placeholders such as:
 <PUBSUB_TOPIC>
 <CLICKUP_LIST_ID>
 <CUSTOM_FIELD_ID>
-<SCHOOL_IT_EMAIL>
+<IT_EMAIL>
 ```
 
 These placeholders do **not** represent production values.
@@ -48,7 +49,7 @@ Production credentials and identifiers are maintained separately through the app
 
 ## 1. Project Purpose
 
-IT Workflow Automation is an automation system designed to reduce the manual administrative work involved in school IT support.
+IT Workflow Automation is an automation system designed to reduce the manual administrative work involved in IT support.
 
 The system connects:
 
@@ -110,7 +111,7 @@ The long-term goal is to create a centralized and largely automated IT operation
 
 - [ ] Gmail Pub/Sub webhook authentication hardening
 - [ ] Additional sensitive-data minimization
-- [ ] Final school privacy/data-policy review
+- [ ] Organization privacy/data-policy review
 - [ ] Automatic Gmail Watch renewal
 - [ ] Production logging review
 - [ ] Credential rotation procedures
@@ -198,7 +199,7 @@ ClickUp API
 ### Manual Workflow
 
 ```text
-Ridgeline IT Automation UI
+IT Workflow Automation UI
     |
     v
 Paste IT Request
@@ -275,7 +276,7 @@ The production hostname has intentionally been removed from this public document
 
 | Route | Purpose |
 |---|---|
-| `/` | Main Ridgeline IT Automation interface |
+| `/` | Main IT Workflow Automation interface |
 | `/status` | Reports configuration status |
 | `/test-openai` | Tests OpenAI API connectivity |
 | `/google-auth` | Starts Google OAuth authorization |
@@ -308,7 +309,9 @@ JIRA_WEBHOOK_SECRET
 
 The actual values are **not** included in this repository.
 
-The Worker accesses them through the environment:
+The Worker accesses them through the environment.
+
+Example:
 
 ```javascript
 env.OPENAI_API_KEY
@@ -685,7 +688,7 @@ Project Number:
 
 The real production identifiers have intentionally been removed.
 
-The project contains/configures:
+The project contains or configures:
 
 - Gmail API
 - Google OAuth
@@ -839,7 +842,7 @@ The production mailbox address is intentionally omitted.
 Public placeholder:
 
 ```text
-<SCHOOL_IT_EMAIL>
+<IT_EMAIL>
 ```
 
 ---
@@ -1423,10 +1426,10 @@ Waiting On
 
 **High**
 
-- Teaching significantly affected
-- Testing affected
+- Core operations significantly affected
+- Testing or scheduled activities affected
 - Multiple users affected
-- Significant staff productivity impact
+- Significant productivity impact
 - Clearly time-sensitive request
 
 **Normal**
@@ -1560,7 +1563,7 @@ Example:
 ```text
 Parent:
 
-Troubleshoot classroom printer offline
+Troubleshoot printer offline
 
 
 Subtasks:
@@ -1588,7 +1591,7 @@ https://mail.google.com/mail/u/0/#all/<MESSAGE_ID>
 
 The URL is placed into the ClickUp `Related Email` custom field.
 
-This allows the IT technician to move from ClickUp back to the original Gmail conversation.
+This allows the technician to move from ClickUp back to the original Gmail conversation.
 
 ---
 
@@ -1653,19 +1656,21 @@ Jira sends structured JSON similar to:
 
 ## 53. Jira Webhook Authentication
 
-The Jira webhook includes a custom header:
+The Jira webhook includes a custom authentication header.
+
+Public documentation placeholder:
 
 ```text
-X-Ridgeline-Webhook-Secret
+X-Automation-Webhook-Secret
 ```
 
-The corresponding Worker secret is:
+The corresponding Worker secret is represented as:
 
 ```text
 JIRA_WEBHOOK_SECRET
 ```
 
-The production value is not included in the repository.
+The production header/value configuration is not included in this repository.
 
 The Worker verifies the provided value before processing the event.
 
@@ -1701,11 +1706,17 @@ The original Jira ticket URL is written into the ClickUp `Ticket URL` field.
 
 The Cloudflare Worker also hosts a manual interface.
 
-This allows IT staff to create AI-assisted tasks that did not originate from Gmail or Jira.
+The interface is referred to in this documentation as:
+
+```text
+IT Workflow Automation
+```
+
+It allows IT staff to create AI-assisted tasks that did not originate from Gmail or Jira.
 
 Examples:
 
-- Verbal staff requests
+- Verbal user requests
 - Problems discovered during troubleshooting
 - Infrastructure improvement ideas
 - Maintenance work
@@ -1830,7 +1841,7 @@ Purpose:
 - Verify Gmail API connectivity
 - Verify mailbox access
 
-Mailbox information should not be included in public documentation.
+Mailbox information is intentionally excluded from public documentation.
 
 ---
 
@@ -1908,6 +1919,7 @@ The project already includes several security controls:
 7. Gmail email bodies are not intentionally persisted in Workers KV.
 8. Public documentation does not contain production secrets.
 9. Infrastructure identifiers in this public README are intentionally generalized.
+10. Organization-specific names and identifiers are intentionally excluded.
 
 ---
 
@@ -1919,7 +1931,7 @@ Primary remaining areas:
 
 - [ ] Gmail Pub/Sub webhook authentication
 - [ ] AI data minimization
-- [ ] School privacy/data-policy review
+- [ ] Organization privacy/data-policy review
 - [ ] Production logging review
 - [ ] Credential rotation procedures
 - [ ] Automatic Gmail Watch renewal
@@ -1975,23 +1987,22 @@ Potential improvements include:
 - Redact sensitive identifiers when practical
 - Avoid processing attachments unless explicitly required
 - Restrict AI processing to appropriate IT-related content
-- Define which school data categories are permitted to be processed
+- Define which organizational data categories are permitted to be processed
 
 ---
 
-## 67. School Data Privacy
+## 67. Data Privacy
 
 Technical security does not automatically equal organizational authorization.
 
-Before processing potentially sensitive school information, the production deployment should consider applicable:
+Before processing potentially sensitive information, the production deployment should consider applicable:
 
-- School policies
-- Student privacy requirements
-- Staff privacy requirements
+- Organization policies
+- User privacy requirements
 - Data-processing agreements
 - Vendor agreements
 - Administrative approval
-- Applicable legal requirements
+- Applicable legal or regulatory requirements
 
 The project should use data minimization wherever practical.
 
@@ -2020,8 +2031,8 @@ Secrets should be rotated when appropriate.
 Production logging should avoid unnecessarily recording:
 
 - Email bodies
-- Student information
-- Staff private information
+- Personally identifiable information
+- Private user information
 - OAuth access tokens
 - OAuth refresh tokens
 - API keys
@@ -2152,8 +2163,8 @@ Also never commit:
 - Refresh tokens
 - Production API tokens
 - Private email contents
-- Student records
-- Sensitive staff information
+- Personally identifiable information
+- Sensitive organizational information
 - Production logs containing private information
 - Screenshots containing credentials
 - Local secret files
@@ -2193,7 +2204,7 @@ Additional IDE and runtime-specific exclusions can be added as necessary.
 - OAuth tokens
 - Refresh tokens
 - Webhook secrets
-- Sensitive school data
+- Sensitive organizational data
 - Unnecessary internal infrastructure identifiers
 
 ---
@@ -2351,7 +2362,7 @@ JIRA_WEBHOOK_SECRET=<SECRET>
 
 - [ ] Authenticate Gmail webhook
 - [ ] Improve data minimization
-- [ ] Review sensitive school information handling
+- [ ] Review sensitive information handling
 - [ ] Review production logs
 - [ ] Establish credential rotation procedures
 - [ ] Final security assessment
@@ -2437,7 +2448,7 @@ Only information necessary for the workflow should be processed or retained.
 
 ## 82. Project Summary
 
-Ridgeline IT Automation is an AI-assisted IT workflow system connecting:
+IT Workflow Automation is an AI-assisted IT workflow system connecting:
 
 - Gmail
 - Jira Service Management
@@ -2478,7 +2489,7 @@ This includes:
 
 - Authenticating Gmail webhook traffic
 - Reducing unnecessary AI data exposure
-- Reviewing school data/privacy requirements
+- Reviewing organizational data/privacy requirements
 - Improving logging practices
 - Establishing credential rotation procedures
 - Automating Gmail Watch renewal
@@ -2488,11 +2499,13 @@ This includes:
 
 ## 83. Public Repository Disclaimer
 
-This repository documents the architecture and implementation of the project while intentionally excluding production-sensitive information.
+This repository documents the architecture and implementation of **IT Workflow Automation** while intentionally excluding production-sensitive and organization-specific information.
 
 Names and descriptions of technologies and APIs are retained where useful for understanding the architecture.
 
-Infrastructure-specific identifiers have been replaced with generic placeholders such as:
+Organization names, email addresses, internal hostnames, and infrastructure-specific identifiers have been removed or replaced with generic placeholders.
+
+Examples include:
 
 ```text
 <WORKER_DOMAIN>
@@ -2505,7 +2518,7 @@ Infrastructure-specific identifiers have been replaced with generic placeholders
 
 <PUBSUB_SUBSCRIPTION>
 
-<SCHOOL_IT_EMAIL>
+<IT_EMAIL>
 
 <CLICKUP_WORKSPACE_ID>
 
